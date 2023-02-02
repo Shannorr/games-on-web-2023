@@ -5,7 +5,7 @@ Lancer le jeu :
 npm run build
 npm run start
 
-Toujours faire un git pull avant de commecner une nouvelle feature !!!!!
+Toujours faire un git pull avant de commencer une nouvelle feature !!!!!
 
 Pour les branches : (ne pas push sur le master si possible)
 -> Master
