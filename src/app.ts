@@ -1,42 +1,72 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder } from "@babylonjs/core";
+import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, FreeCamera } from "@babylonjs/core";
 
 class App {
+  scene: Scene;
+  engine: Engine;
+  private _canvas: HTMLCanvasElement;
+
   constructor() {
-      // create the canvas html element and attach it to the webpage
-      var canvas = document.createElement("canvas");
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.id = "gameCanvas";
-      document.body.appendChild(canvas);
+    this._canvas = this._createCanvas();
+    this.engine = new Engine(this._canvas, true);
+    this.scene = this.CreateScene();
 
-      // initialize babylon scene and engine
-      var engine = new Engine(canvas, true);
-      var scene = new Scene(engine);
+    this.engine.runRenderLoop(() => {
+        this.scene.render();
+    });
+  }
 
-      var camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, Vector3.Zero(), scene);
-      camera.attachControl(canvas, true);
-      var light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
-      var sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
+  CreateScene(): Scene {
+    const scene = new Scene(this.engine);
+    const camera = new FreeCamera("camera", new Vector3(0, 1, -5), this.scene);
+    camera.attachControl();
 
-      // hide/show the Inspector
-      window.addEventListener("keydown", (ev) => {
-          // Shift+Ctrl+Alt+I
-          if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.key === 'i') {
-              if (scene.debugLayer.isVisible()) {
-                  scene.debugLayer.hide();
-              } else {
-                  scene.debugLayer.show();
-              }
-          }
-      });
+    const hemiLight = new HemisphericLight(
+      "hemiLight",
+      new Vector3(0, 1, 0),
+      this.scene
+    );
 
-      // run the main render loop
-      engine.runRenderLoop(() => {
-          scene.render();
-      });
+    hemiLight.intensity = 0.5;
+
+    const ground = MeshBuilder.CreateGround(
+      "ground",
+      { width: 10, height: 10 },
+      this.scene
+    );
+
+    const ball = MeshBuilder.CreateSphere("ball", { diameter: 1 }, this.scene);
+
+    ball.position = new Vector3(0, 0.5, 0);
+
+    return scene;
+  }
+
+  private _createCanvas(): HTMLCanvasElement {
+    //Commented out for development
+    document.documentElement.style["overflow"] = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.width = "100%";
+    document.documentElement.style.height = "100%";
+    document.documentElement.style.margin = "0";
+    document.documentElement.style.padding = "0";
+    document.body.style.overflow = "hidden";
+    document.body.style.width = "100%";
+    document.body.style.height = "100%";
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+
+    //create the canvas html element and attach it to the webpage
+    this._canvas = document.createElement("canvas");
+    this._canvas.style.width = "100%";
+    this._canvas.style.height = "100%";
+    this._canvas.id = "gameCanvas";
+    document.body.appendChild(this._canvas);
+
+    return this._canvas;
   }
 }
+
 new App();
