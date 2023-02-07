@@ -1,7 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, FreeCamera } from "@babylonjs/core";
+import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, FreeCamera, SceneLoader } from "@babylonjs/core";
 
 class App {
   scene: Scene;
@@ -12,16 +12,18 @@ class App {
     this._canvas = this._createCanvas();
     this.engine = new Engine(this._canvas, true);
     this.scene = this.CreateScene();
+    this.CreateSimplePlane();
 
     this.engine.runRenderLoop(() => {
-        this.scene.render();
+      this.scene.render();
     });
   }
 
   CreateScene(): Scene {
     const scene = new Scene(this.engine);
-    const camera = new FreeCamera("camera", new Vector3(0, 1, -5), this.scene);
+    const camera = new FreeCamera("camera", new Vector3(0, 5, -5), this.scene);
     camera.attachControl();
+    camera.speed = 0.5;
 
     const hemiLight = new HemisphericLight(
       "hemiLight",
@@ -30,16 +32,6 @@ class App {
     );
 
     hemiLight.intensity = 0.5;
-
-    const ground = MeshBuilder.CreateGround(
-      "ground",
-      { width: 10, height: 10 },
-      this.scene
-    );
-
-    const ball = MeshBuilder.CreateSphere("ball", { diameter: 1 }, this.scene);
-
-    ball.position = new Vector3(0, 0.5, 0);
 
     return scene;
   }
@@ -66,6 +58,18 @@ class App {
     document.body.appendChild(this._canvas);
 
     return this._canvas;
+  }
+
+  async CreateSimplePlane(): Promise<void> {
+    const models = await SceneLoader.ImportMeshAsync(
+      "",
+      "./models/",
+      "mapTestBlender.glb"
+    );
+
+    models.meshes[0].position = new Vector3(0, 0, 0);
+
+    console.log("models", models);
   }
 }
 
