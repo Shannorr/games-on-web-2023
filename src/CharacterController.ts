@@ -50,20 +50,6 @@ export class Player extends TransformNode {
 
     shadowGenerator.addShadowCaster(assets.mesh); //the player mesh will cast shadows
 
-    //if player falls through "world", reset the position to the last safe grounded position
-    this.mesh.actionManager.registerAction(
-      new ExecuteCodeAction({
-        trigger: ActionManager.OnIntersectionEnterTrigger,
-        parameter: this.scene.getMeshByName("ground")
-      },
-        () => {
-          this.mesh.position.copyFrom(this._lastGroundPos); // need to use copy or else they will be both pointing at the same thing & update together
-          //--SOUNDS--
-          // this._resetSfx.play();
-        }
-      )
-    );
-
     this._input = input;
   }
 
