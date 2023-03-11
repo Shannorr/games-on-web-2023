@@ -21,8 +21,8 @@ import {
 } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Button, Control } from "@babylonjs/gui";
 import { Environment } from "./environment";
-import { Player } from "./characterController";
 import { PlayerInput } from "./inputController";
+import { Player } from "./characterController";
 
 enum State {
 	START = 0,
@@ -159,7 +159,7 @@ class App {
 		let camera = new FreeCamera(
 			"camera1",
 			new Vector3(0, 0, 0),
-			this._cutScene
+			this._cutScene,
 		);
 		camera.setTarget(Vector3.Zero());
 		this._cutScene.clearColor = new Color4(0, 0, 0, 1);
@@ -192,7 +192,7 @@ class App {
 
 		//--START LOADING AND SETTING UP THE GAME DURING THIS SCENE--
 		var finishedLoading = false;
-		await this._setUpGame().then((res) => {
+		await this._setUpGame().then(res => {
 			finishedLoading = true;
 		});
 	}
@@ -211,13 +211,17 @@ class App {
 	private async _loadCharacterAssets(scene) {
 		async function loadCharacter() {
 			//collision mesh
-			const outer = MeshBuilder.CreateBox("outer", { width: 2, depth: 1, height: 3 }, scene);
+			const outer = MeshBuilder.CreateBox(
+				"outer",
+				{ width: 2, depth: 1, height: 3 },
+				scene,
+			);
 			outer.isVisible = false;
 			outer.isPickable = false;
 			outer.checkCollisions = true;
 
 			//move origin of box collider to the bottom of the mesh (to match player mesh)
-			outer.bakeTransformIntoVertices(Matrix.Translation(0, 1.5, 0))
+			outer.bakeTransformIntoVertices(Matrix.Translation(0, 1.5, 0));
 			//for collisions
 			outer.ellipsoid = new Vector3(1, 1.5, 1);
 			outer.ellipsoidOffset = new Vector3(0, 1.5, 0);
@@ -225,7 +229,12 @@ class App {
 			outer.rotationQuaternion = new Quaternion(0, 1, 0, 0); // rotate the player mesh 180 since we want to see the back of the player
 
 			//--IMPORTING MESH--
-			return SceneLoader.ImportMeshAsync(null, "./models/", "amy.babylon", scene).then((result) => {
+			return SceneLoader.ImportMeshAsync(
+				null,
+				"./models/",
+				"amy.babylon",
+				scene,
+			).then(result => {
 				const root = result.meshes[0];
 				//body is our actual player mesh
 				const body = root;
@@ -233,14 +242,14 @@ class App {
 				body.isPickable = false;
 				body.getChildMeshes().forEach(m => {
 					m.isPickable = false;
-				})
+				});
 				body.scaling = new Vector3(0.05, 0.05, 0.05);
 
 				//return the mesh and animations
 				return {
 					mesh: outer as Mesh,
-					animationGroups: result.animationGroups
-				}
+					animationGroups: result.animationGroups,
+				};
 			});
 		}
 
@@ -257,7 +266,7 @@ class App {
 		light.diffuse = new Color3(
 			0.08627450980392157,
 			0.10980392156862745,
-			0.15294117647058825
+			0.15294117647058825,
 		);
 		light.intensity = 35;
 		light.radius = 1;
@@ -277,7 +286,7 @@ class App {
 		scene.clearColor = new Color4(
 			0.01568627450980392,
 			0.01568627450980392,
-			0.20392156862745098
+			0.20392156862745098,
 		); // a color that fit the overall color scheme better
 
 		//--GUI--
