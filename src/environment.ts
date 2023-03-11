@@ -14,7 +14,7 @@ export class Environment {
 		const assets = await this._loadAsset();
 		//Loop through all environment meshes that were imported
 		assets.allMeshes.forEach(m => {
-			m.receiveShadows = true;
+			// m.receiveShadows = true;
 			m.checkCollisions = true;
 		});
 	}
