@@ -19,7 +19,7 @@ import {
 	Mesh,
 	SceneLoader,
 } from "@babylonjs/core";
-import { AdvancedDynamicTexture, Button, Control } from "@babylonjs/gui";
+import { AdvancedDynamicTexture, Button, Control, TextBlock } from "@babylonjs/gui";
 import { Environment } from "./environment";
 import { PlayerInput } from "./inputController";
 import { Player } from "./characterController";
@@ -117,7 +117,7 @@ class App {
 
 		this._scene.detachControl();
 		let scene = new Scene(this._engine);
-		scene.clearColor = new Color4(0, 0, 0, 1);
+		scene.clearColor = Color4.FromHexString("#A0CFC9");
 		let camera = new FreeCamera("camera1", new Vector3(0, 0, 0), scene);
 		camera.setTarget(Vector3.Zero());
 
@@ -125,15 +125,46 @@ class App {
 		const guiMenu = AdvancedDynamicTexture.CreateFullscreenUI("UI");
 		guiMenu.idealHeight = 720; //fit our fullscreen ui to this height
 
+		const text1 = new TextBlock();
+		text1.text = "TO BE GREEN";
+		text1.color = "black";
+		text1.fontSize = 100;
+		text1.top = -250;
+		guiMenu.addControl(text1);
+
 		//create a simple button
 		const startBtn = Button.CreateSimpleButton("start", "PLAY");
-		startBtn.width = 0.2;
-		startBtn.height = "40px";
+		startBtn.width = 0.5;
+		startBtn.height = "100px";
+		startBtn.fontSize = "96px"
 		startBtn.color = "white";
-		startBtn.top = "-14px";
+		startBtn.background = "#2D70A0";
+		startBtn.top = "-100px";
 		startBtn.thickness = 0;
-		startBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+		startBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
 		guiMenu.addControl(startBtn);
+
+		const optionBtn = Button.CreateSimpleButton("option", "OPTION");
+		optionBtn.width = 0.5;
+		optionBtn.height = "100px";
+		optionBtn.fontSize = "96px"
+		optionBtn.color = "white";
+		optionBtn.background = "#2D70A0";
+		optionBtn.top = "20px";
+		optionBtn.thickness = 0;
+		optionBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+		guiMenu.addControl(optionBtn);
+
+		const creditBtn = Button.CreateSimpleButton("credit", "CREDIT");
+		creditBtn.width = 0.5;
+		creditBtn.height = "100px";
+		creditBtn.fontSize = "96px"
+		creditBtn.color = "white";
+		creditBtn.background = "#2D70A0";
+		creditBtn.top = "140px";
+		creditBtn.thickness = 0;
+		creditBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+		guiMenu.addControl(creditBtn);
 
 		//this handles interactions with the start button attached to the scene
 		startBtn.onPointerDownObservable.add(() => {
